@@ -1,50 +1,61 @@
 <template>
-  <div id="app">
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+      <div class="d-flex align-center">
+        <v-img
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          transition="scale-transition"
+          width="40"
+        />
 
-    <h1> Header </h1>
+        <v-img
+          alt="Vuetify Name"
+          class="shrink mt-1 hidden-sm-and-down"
+          contain
+          min-width="100"
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+          width="100"
+        />
+      </div>
 
-    <img alt="Vue logo" src="./assets/logo.png">
+      <v-spacer></v-spacer>
 
-    <p>{{greetText}}</p>
+      <v-btn
+        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        target="_blank"
+        text
+      >
+        <span class="mr-2">Latest Release</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+    </v-app-bar>
 
-    <p> <TypeButton :msg='greetText' @click="onTypeButtonClicked">konomi</TypeButton> </p>
-
-    <p> <ResetButton v-model="greetText"></ResetButton> </p>
-
-    <p> <ImagePlace></ImagePlace> </p>
-
-  </div>
+    <v-content>
+      <HelloWorld/>
+    </v-content>
+  </v-app>
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
-  import TypeButton from '@/components/TypeButton.vue';
-  import ResetButton from '@/components/ResetButton.vue';
-  import ImagePlace from '@/components/ImagePlace.vue';
+import Vue from 'vue';
+import HelloWorld from './components/HelloWorld.vue';
 
-  @Component({
-    components: {
-      TypeButton,
-      ResetButton,
-      ImagePlace,
-    },
-  })
-  export default class App extends Vue {
-    public greetText: string = "Hello";
+export default Vue.extend({
+  name: 'App',
 
-    public onTypeButtonClicked(){
-        this.greetText = "こんにちは";
-    }
-  }
+  components: {
+    HelloWorld,
+  },
+
+  data: () => ({
+    //
+  }),
+});
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
