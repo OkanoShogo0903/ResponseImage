@@ -1,5 +1,9 @@
 <template>
-  <v-app>
+
+</template>
+
+<template>
+  <v-app id="app">
     <v-app-bar
       app
       color="primary"
@@ -38,24 +42,54 @@
     </v-app-bar>
 
     <v-content>
-      <HelloWorld/>
+      <h1> Header </h1>
+
+      <img alt="Vue logo" src="./assets/logo.png">
+
+      <p> {{greetText}} </p>
+
+      <TypeButton :msg='greetText' @click="onTypeButtonClicked">
+        konomi
+      </TypeButton> 
+
+      <ResetButton v-model="greetText"/>
+
+      <ImagePlace/>
     </v-content>
+
   </v-app>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+  import { Component, Vue } from 'vue-property-decorator';
+  import TypeButton from '@/components/TypeButton.vue';
+  import ResetButton from '@/components/ResetButton.vue';
+  import ImagePlace from '@/components/ImagePlace.vue';
 
-export default Vue.extend({
-  name: 'App',
+  @Component({
+    components: {
+      TypeButton,
+      ResetButton,
+      ImagePlace,
+    },
+  })
+  export default class App extends Vue {
+    public greetText: string = "Hello";
 
-  components: {
-    HelloWorld,
-  },
+    public onTypeButtonClicked(){
+        this.greetText = "こんにちは";
+    }
+  }
 
-  data: () => ({
-    //
-  }),
-});
 </script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>
