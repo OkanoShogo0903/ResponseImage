@@ -1,7 +1,5 @@
 <template>
-  <li>
-    <img class="image" :src="url"/> 
-  </li>
+  <v-img class="image" :src="url"/> 
 </template>
 
 <script lang="ts">
@@ -17,10 +15,9 @@
 
 <style scoped>
 .image {
+  width:100%; height:100%;
   position: relative;
-  width: 180px; height: 100px;
   background-color: #fff;
-  border: solid 10px #fff;
   box-shadow: 0 0 20px #444;
   overflow: hidden;
 }

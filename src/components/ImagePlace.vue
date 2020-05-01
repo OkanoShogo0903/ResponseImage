@@ -1,9 +1,12 @@
 <template>
-  <ul class="place">
-    <p v-for="url in urls">
-      <ImageFrame :url="url" />
-    </p>
-  </ul>
+  <v-container fluid>
+    <v-row>
+      <v-col v-for="url in urls" :key="i" cols="4">
+        <ImageFrame :url="url" />
+      </v-col>
+    </v-row>
+  </v-container>
+
 </template>
 
 <script lang="ts">
