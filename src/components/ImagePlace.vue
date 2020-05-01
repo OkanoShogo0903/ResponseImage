@@ -21,13 +21,13 @@
   export default class ImagePlace extends Vue {
     // Load image url
     public urls: string[] = [
-      require("@/assets/ehehe.jpg"),
-      require("@/assets/kuku.jpg"),
-      require("@/assets/mimamori.jpg"),
-      require("@/assets/otu.jpg"),
-      require("@/assets/outikaero.png"),
-      require("@/assets/tisu.jpg"),
-      require("@/assets/yunomi.png"),
+      "@/assets/ehehe.jpg",
+      "@/assets/kuku.jpg",
+      "@/assets/mimamori.jpg",
+      "@/assets/otu.jpg",
+      "@/assets/outikaero.png",
+      "@/assets/tisu.jpg",
+      "@/assets/yunomi.png",
     ]
 
     public created(){
