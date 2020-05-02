@@ -2,9 +2,7 @@
   <v-navigation-drawer
     v-model="drawer"
     :color="color"
-    :expand-on-hover="expandOnHover"
     :mini-variant="miniVariant"
-    :permanent="permanent"
     absolute
     dark
   >
@@ -34,16 +32,16 @@
       <v-divider></v-divider>
 
       <v-list-item
-        v-for="item in items"
-        :key="item.title"
+        v-for="choice in choices"
+        :key="choice.title"
         link
       >
         <v-list-item-icon>
-          <v-icon>{{ item.icon }}</v-icon>
+          <v-icon>{{ choice.icon }}</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
+          <v-list-item-title>{{ choice.attribute }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -70,10 +68,10 @@
   @Component
   export default class Navigation extends Vue {
     drawer: boolean = true;
-    items : any = [
-      { title: 'Dashboard', icon: 'mdi-view-dashboard' },
-      { title: 'Photos', icon: 'mdi-image' },
-      { title: 'About', icon: 'mdi-help-box' },
+    choices : any = [
+      { attribute: 'Dashboard', icon: 'mdi-view-dashboard' },
+      { attribute: 'Photos', icon: 'mdi-image' },
+      { attribute: 'About', icon: 'mdi-help-box' },
     ];
     color: string = 'primary';
     colors: string[] = [
@@ -83,11 +81,8 @@
       'red',
       'teal',
     ];
-    right: boolean = false;
-    permanent: boolean = true;
     miniVariant: boolean = false;
-    expandOnHover: boolean = false;
-    background: boolean = false;
+    
   }
 
 </script>

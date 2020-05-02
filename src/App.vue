@@ -4,7 +4,6 @@
 
     <v-content>
       <TypeButton :msg='greetText' @click="onTypeButtonClicked">
-        konomi
       </TypeButton> 
 
       <ResetButton v-model="greetText"/>
@@ -17,8 +16,8 @@
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator';
-  import TypeButton from '@/components/TypeButton.vue';
   import ResetButton from '@/components/ResetButton.vue';
+  import TypeButton from '@/components/TypeButton.vue';
   import ImagePlace from '@/components/ImagePlace.vue';
   import Navigation from '@/components/Navigation.vue';
 
@@ -31,10 +30,17 @@
     },
   })
   export default class App extends Vue {
+
+    public colums: any = null;
+    private yaml_url: string = '@/data.yaml';
     public greetText: string = "Hello";
 
     public onTypeButtonClicked(){
         this.greetText = "こんにちは";
+    }
+
+    public created(){
+      //this.attributes = data
     }
   }
 
