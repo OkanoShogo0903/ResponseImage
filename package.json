@@ -9,6 +9,7 @@
     "start": "npm install && vue-cli-service serve"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "file-system": "^2.2.2",
     "fs": "0.0.1-security",
     "js-yaml": "^3.13.1",
@@ -16,6 +17,7 @@
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.4.1",
     "vue-sidebar-menu": "^4.5.3",
+    "vue2-dropzone": "^3.6.0",
     "vuetify": "^2.2.26",
     "yaml": "^1.9.2",
     "yaml-loader": "^0.6.0"

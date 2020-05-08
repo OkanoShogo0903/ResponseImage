@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col v-for="url in urls" :key="i" cols="4">
+      <v-col v-for="url in urls" cols="4">
         <ImageFrame :url="url" />
       </v-col>
     </v-row>
@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from "vue-property-decorator";
+  import {Component, Prop, Vue} from "vue-property-decorator";
   import ImageFrame from "@/components/ImageFrame.vue";
 
   @Component({
@@ -20,8 +20,8 @@
   })
   export default class ImagePlace extends Vue {
     // Load image url
-    public urls: string[] = [
-    ]
+    @Prop()
+    public urls!: string[];
 
     public created(){
     }
