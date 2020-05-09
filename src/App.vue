@@ -3,11 +3,15 @@
     <Navigation/>
 
     <v-content>
+      <vue-dropzone v-if="dropzoneOptions" ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
+
       <TypeButton :msg='greetText' @click="onTypeButtonClicked">
       </TypeButton> 
+      <!--
+      <UploadPage :upload_url='registe_url'/>
+      -->
 
       <ResetButton v-model="greetText"/>
-      <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
 
       <ImagePlace :urls='show_urls' />
     </v-content>
@@ -19,8 +23,8 @@
   import { Component, Vue } from 'vue-property-decorator';
 
   import axios from 'axios';
-  import vue2Dropzone from 'vue2-dropzone';
-  import 'vue2-dropzone/dist/vue2Dropzone.min.css';
+  import vue2Dropzone from 'vue2-dropzone'
+  import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
   import ResetButton from '@/components/ResetButton.vue';
   import TypeButton from '@/components/TypeButton.vue';
@@ -38,8 +42,10 @@
   })
 
   export default class App extends Vue {
+    private base_endpoint:  string = 'https://img-database.herokuapp.com/'
+    //private base_endpoint:  string = 'http://localhost:8080/'
     //private base_endpoint:  string = 'https://img-database.herokuapp.com/'
-    private base_endpoint:  string = 'http://localhost:8080/'
+
     private get_all_image:  string = 'all_image'
     private get_image:      string = 'images'
     private put_registe:    string = 'registe'
@@ -49,12 +55,15 @@
     public character: ( string | null ) = null
     public attributes: ( string | null )[] = ["あいさつ", null, null] 
 
-    private dropzoneOptions: any = {
-      url: 'http://localhost:8080/' + this.put_registe + '?character=' + this.character + '&primary=' + this.attributes[0] + '&secondary=' + this.attributes[1] + '&tertiary=' + this.attributes[2],
-      method: 'put'
-    }
+    public registe_url: string = this.base_endpoint + this.put_registe + '?character=' + this.character + '&primary=' + this.attributes[0] + '&secondary=' + this.attributes[1] + '&tertiary=' + this.attributes[2]
     // paramName: 'hoge'
     //params: {"attributes": this.attributes}
+    //
+    public dropzoneOptions: any = {
+      url: this.registe_url,
+      method: 'put',
+      maxFilesize: 0.5,
+    }
 
     public colums: any = null;
     public greetText: string = "Hello";
@@ -96,6 +105,7 @@
     }
 
     public created(){
+      //
       // Get all image.
       //this.getImage('flatter')
       //this.getAllImage()
