@@ -48,6 +48,7 @@
 
     private get_all_image:  string = 'all_image'
     private get_image:      string = 'images'
+    private get_all_genre:  string = 'all_genre'
     private put_registe:    string = 'registe'
 
     private show_urls: string[] = new Array();
@@ -104,11 +105,24 @@
       })
     }
 
+    private getAllGenre() {
+      axios.get(this.base_endpoint + this.get_all_genre)
+      .then(res => {
+        if (res.status === 200) {
+          console.log(res.data)
+        }
+      })
+      .catch(error => {
+          console.log(error);
+      })
+    }
+
     public created(){
       //
       // Get all image.
       //this.getImage('flatter')
       //this.getAllImage()
+      this.getAllGenre()
 
       //this.attributes = data
     }
