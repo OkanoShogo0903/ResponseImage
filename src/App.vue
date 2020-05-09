@@ -62,7 +62,7 @@
     public dropzoneOptions: any = {
       url: this.registe_url,
       method: 'put',
-      maxFilesize: 0.5,
+      maxFilesize: 5,
     }
 
     public colums: any = null;
