@@ -3,17 +3,10 @@
     <Navigation :genre_list="genre_list" v-model="selected_genre"/>
 
     <v-content>
-      <vue-dropzone v-if="dropzoneOptions" ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
 
       {{ selected_genre }}
 
-      <TypeButton :msg='greetText' @click="onTypeButtonClicked">
-      </TypeButton> 
-      <!--
-      <UploadPage :upload_url='registe_url'/>
-      -->
-
-      <ResetButton v-model="greetText"/>
+      <UploadPlace :upload_endpoint='base_endpoint + put_registe'/>
 
       <ImagePlace :urls='show_urls' />
     </v-content>
@@ -25,21 +18,16 @@
   import { Component, Watch, Vue } from 'vue-property-decorator';
 
   import axios from 'axios';
-  import vue2Dropzone from 'vue2-dropzone'
-  import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
-  import ResetButton from '@/components/ResetButton.vue';
-  import TypeButton from '@/components/TypeButton.vue';
+  import UploadPlace from '@/components/UploadPlace.vue';
   import ImagePlace from '@/components/ImagePlace.vue';
   import Navigation from '@/components/Navigation.vue';
 
   @Component({
     components: {
-      TypeButton,
-      ResetButton,
+      UploadPlace,
       ImagePlace,
       Navigation,
-      vueDropzone: vue2Dropzone,
     },
   })
 
@@ -57,26 +45,6 @@
     private genre_list: string[] = new Array();
 
     public selected_genre: ( string | null ) = null
-
-    public character: ( string | null ) = null
-    public attributes: ( string | null )[] = ["あいさつ", null, null] 
-
-    public registe_url: string = this.base_endpoint + this.put_registe + '?character=' + this.character + '&primary=' + this.attributes[0] + '&secondary=' + this.attributes[1] + '&tertiary=' + this.attributes[2]
-    // paramName: 'hoge'
-    //params: {"attributes": this.attributes}
-    //
-    public dropzoneOptions: any = {
-      url: this.registe_url,
-      method: 'put',
-      maxFilesize: 5,
-    }
-
-    public colums: any = null;
-    public greetText: string = "Hello";
-
-    public onTypeButtonClicked(){
-        this.greetText = "こんにちは";
-    }
 
     private getAllImageUrl() {
       var urls = new Array();
@@ -137,7 +105,7 @@
     }
 
     public created(){
-      //this.show_urls = this.getAllImageUrl()
+      this.show_urls = this.getAllImageUrl()
       this.genre_list = this.getAllGenre()
     }
   }
