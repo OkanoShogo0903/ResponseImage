@@ -1,9 +1,11 @@
 <template>
   <v-app id="app">
-    <Navigation/>
+    <Navigation :genre_list="genre_list" v-model="selected_genre"/>
 
     <v-content>
       <vue-dropzone v-if="dropzoneOptions" ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
+
+      {{ selected_genre }}
 
       <TypeButton :msg='greetText' @click="onTypeButtonClicked">
       </TypeButton> 
@@ -20,7 +22,7 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
+  import { Component, Watch, Vue } from 'vue-property-decorator';
 
   import axios from 'axios';
   import vue2Dropzone from 'vue2-dropzone'
@@ -42,8 +44,8 @@
   })
 
   export default class App extends Vue {
-    private base_endpoint:  string = 'https://img-database.herokuapp.com/'
-    //private base_endpoint:  string = 'http://localhost:8080/'
+    //private base_endpoint:  string = 'https://img-database.herokuapp.com/'
+    private base_endpoint:  string = 'http://localhost:8080/'
     //private base_endpoint:  string = 'https://img-database.herokuapp.com/'
 
     private get_all_image:  string = 'all_image'
@@ -52,6 +54,9 @@
     private put_registe:    string = 'registe'
 
     private show_urls: string[] = new Array();
+    private genre_list: string[] = new Array();
+
+    public selected_genre: ( string | null ) = null
 
     public character: ( string | null ) = null
     public attributes: ( string | null )[] = ["あいさつ", null, null] 
@@ -73,21 +78,24 @@
         this.greetText = "こんにちは";
     }
 
-    private getAllImage() {
+    private getAllImageUrl() {
+      var urls = new Array();
       axios.get(this.base_endpoint + this.get_all_image)
       .then(res => {
         if (res.status === 200) {
           for (var i in res.data) {
-            this.show_urls.push( res.data[i]['url'] )
+            urls.push( res.data[i]['url'] )
           }
         }
       })
       .catch(error => {
           console.log(error);
       })
+      return urls
     }
 
-    private getImage(attribute: string) {
+    private getImageUrl(attribute: string) {
+      var urls = new Array();
       axios.get(this.base_endpoint + this.get_image, {
         params: {
           primary: attribute
@@ -96,35 +104,41 @@
       .then(res => {
         console.log(res)
         if (res.status === 200) {
-          console.log(res.data)
-          // res.data
+          for (var i in res.data) {
+            urls.push( res.data[i]['url'] )
+          }
         }
       })
       .catch(error => {
           console.log(error);
       })
+      return urls
     }
 
     private getAllGenre() {
+      var genres = new Array()
       axios.get(this.base_endpoint + this.get_all_genre)
       .then(res => {
         if (res.status === 200) {
-          console.log(res.data)
+          for (var i in res.data) {
+            genres.push( res.data[i]['Extracted'] )
+          }
         }
       })
       .catch(error => {
           console.log(error);
       })
+      return genres
+    }
+
+    @Watch('selected_genre')
+    onTextChanged(new_selected: string, oldText: string) {
+      this.show_urls = this.getImageUrl(new_selected)
     }
 
     public created(){
-      //
-      // Get all image.
-      //this.getImage('flatter')
-      //this.getAllImage()
-      this.getAllGenre()
-
-      //this.attributes = data
+      //this.show_urls = this.getAllImageUrl()
+      this.genre_list = this.getAllGenre()
     }
   }
 

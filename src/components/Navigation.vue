@@ -31,17 +31,9 @@
 
       <v-divider></v-divider>
 
-      <v-list-item
-        v-for="choice in choices"
-        :key="choice.title"
-        link
-      >
-        <v-list-item-icon>
-          <v-icon>{{ choice.icon }}</v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>{{ choice.attribute }}</v-list-item-title>
+      <v-list-item v-for="choice in genre_list" link >
+        <v-list-item-content @click="onClick(choice);">
+          <v-list-item-title>{{ choice }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -63,16 +55,12 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
+  import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 
   @Component
   export default class Navigation extends Vue {
     drawer: boolean = true;
-    choices : any = [
-      { attribute: 'Dashboard', icon: 'mdi-view-dashboard' },
-      { attribute: 'Photos', icon: 'mdi-image' },
-      { attribute: 'About', icon: 'mdi-help-box' },
-    ];
+
     color: string = 'primary';
     colors: string[] = [
       'primary',
@@ -82,7 +70,18 @@
       'teal',
     ];
     miniVariant: boolean = false;
-    
+
+    @Prop()
+    public genre_list!: string[];
+
+    @Emit()
+    public input(selected: string) {
+    }
+
+    public onClick(s: string){
+      console.log("onClick");
+      this.input(s);
+    }
   }
 
 </script>
