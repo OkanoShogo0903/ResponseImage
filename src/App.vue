@@ -33,8 +33,8 @@
   })
 
   export default class App extends Vue {
-    //private base_endpoint:  string = 'https://img-database.herokuapp.com/'
-    private base_endpoint:  string = 'http://localhost:8080/'
+    private base_endpoint:  string = 'https://img-database.herokuapp.com/'
+    //private base_endpoint:  string = 'http://localhost:8080/'
     //private base_endpoint:  string = 'https://img-database.herokuapp.com/'
 
     private get_all_image:  string = 'all_image'
