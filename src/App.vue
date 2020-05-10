@@ -1,14 +1,15 @@
 <template>
-  <v-app id="app">
+  <v-app id="app" dark>
     <Navigation :genre_list="genre_list" v-model="selected_genre"/>
 
     <v-content>
+      <v-container>
+        {{ selected_genre }}
 
-      {{ selected_genre }}
+        <UploadPlace v-if="is_upload==true" :upload_endpoint='base_endpoint + put_registe'/>
 
-      <UploadPlace :upload_endpoint='base_endpoint + put_registe'/>
-
-      <ImagePlace :urls='show_urls' />
+        <ImagePlace v-if="is_upload==false" :urls='show_urls' />
+      </v-container>
     </v-content>
 
   </v-app>
@@ -44,6 +45,7 @@
     private show_urls: string[] = new Array();
     private genre_list: string[] = new Array();
 
+    public is_upload: boolean = false
     public selected_genre: ( string | null ) = null
 
     private getAllImageUrl() {
@@ -119,6 +121,5 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

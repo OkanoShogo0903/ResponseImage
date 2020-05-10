@@ -2,16 +2,17 @@
   <v-navigation-drawer
     v-model="drawer"
     :color="color"
-    :mini-variant="miniVariant"
+    fixed
     absolute
     dark
+    clipped
   >
     <v-list
       dense
       nav
       class="py-0"
     >
-      <v-list-item two-line :class="miniVariant && 'px-0'">
+      <v-list-item two-line :class="'px-0'">
         <v-list-item-avatar>
           <v-img
             alt="Vuetify Logo"
@@ -32,7 +33,7 @@
       <v-divider></v-divider>
 
       <v-list-item v-for="choice in genre_list" link >
-        <v-list-item-content @click="onClick(choice);">
+        <v-list-item-content @click="onGenreClick(choice);">
           <v-list-item-title>{{ choice }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -40,14 +41,26 @@
       <v-divider></v-divider>
 
       <v-list-item>
-        <v-btn
-          href="https://github.com/OkanoShogo0903?tab=repositories"
-          target="_blank"
-          text
-        >
-          <span class="mr-2">Github</span>
-          <v-icon>mdi-open-in-new</v-icon>
-        </v-btn>
+        <v-list-item-content>
+          <v-btn @click="onUploadClick()">
+            <span class="mr-2">画像をアップロード</span>
+          </v-btn>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-btn
+            href="https://github.com/OkanoShogo0903?tab=repositories"
+            target="_blank"
+            text
+          >
+            <span class="mr-2">Github</span>
+            <v-icon>mdi-open-in-new</v-icon>
+          </v-btn>
+        </v-list-item-content>
       </v-list-item>
     </v-list>
 
@@ -62,25 +75,21 @@
     drawer: boolean = true;
 
     color: string = 'primary';
-    colors: string[] = [
-      'primary',
-      'blue',
-      'success',
-      'red',
-      'teal',
-    ];
-    miniVariant: boolean = false;
 
     @Prop()
     public genre_list!: string[];
 
     @Emit()
-    public input(selected: string) {
-    }
+    public inputGenre(selected: string) {}
 
-    public onClick(s: string){
-      console.log("onClick");
-      this.input(s);
+    public setUploadPage(is_upload: boolean) {}
+
+    public onGenreClick(s: string){
+      this.inputGenre(s);
+      this.setUploadPage(false);
+    }
+    public onUploadClick(){
+      this.setUploadPage(true);
     }
   }
 
