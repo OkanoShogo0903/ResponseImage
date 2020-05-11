@@ -1,5 +1,6 @@
 <template>
   <div>
+    <input type="text" v-model="value">
     <vue-dropzone v-if="dropzoneOptions" ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
   </div>
 </template>

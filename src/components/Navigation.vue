@@ -32,21 +32,41 @@
 
       <v-divider></v-divider>
 
+      <v-list-item-content @click="onAllGenreClick();" link>
+        <v-list-item-title>
+        <v-btn>
+          人気順
+        </v-btn>
+        </v-list-item-title>
+      </v-list-item-content>
+
+      <v-divider></v-divider>
+
+      <v-list-item-content @click="onAllGenreClick();" link>
+        <v-list-item-title>
+        <v-btn>
+          お気に入り
+        </v-btn>
+        </v-list-item-title>
+      </v-list-item-content>
+
+      <v-divider></v-divider>
+
       <v-list-item v-for="choice in genre_list" link >
         <v-list-item-content @click="onGenreClick(choice);">
-          <v-list-item-title>{{ choice }}</v-list-item-title>
+          <v-list-item-title>
+              {{ choice }}
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
       <v-divider></v-divider>
 
-      <v-list-item>
-        <v-list-item-content>
-          <v-btn @click="onUploadClick()">
-            <span class="mr-2">画像をアップロード</span>
-          </v-btn>
-        </v-list-item-content>
-      </v-list-item>
+      <v-list-item-content @click="onUploadClick()">
+        <v-btn>
+          <span class="mr-2"> 画像をアップロード </span>
+        </v-btn>
+      </v-list-item-content>
 
       <v-divider></v-divider>
 
@@ -68,7 +88,7 @@
 </template>
 
 <script lang="ts">
-  import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+  import { Component, Prop, Vue } from 'vue-property-decorator';
 
   @Component
   export default class Navigation extends Vue {
@@ -79,17 +99,16 @@
     @Prop()
     public genre_list!: string[];
 
-    @Emit()
-    public inputGenre(selected: string) {}
-
-    public setUploadPage(is_upload: boolean) {}
-
-    public onGenreClick(s: string){
-      this.inputGenre(s);
-      this.setUploadPage(false);
+    public onAllGenreClick(){
+      this.$router.push('/')
     }
+
+    public onGenreClick(genre: string){
+      this.$router.push('/image/' + genre)
+    }
+
     public onUploadClick(){
-      this.setUploadPage(true);
+      this.$router.push('/upload')
     }
   }
 
