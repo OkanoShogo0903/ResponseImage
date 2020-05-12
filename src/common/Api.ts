@@ -2,8 +2,8 @@ import Vue from 'vue';
 
 import axios from 'axios';
 
-var base_endpoint:  string = 'https://img-database.herokuapp.com/'
-//var base_endpoint:  string = 'http://localhost:8080/'
+//var base_endpoint:  string = 'https://img-database.herokuapp.com/'
+var base_endpoint:  string = 'http://localhost:8080/'
 
 var get_all_image:  string = 'all_image'
 var get_image:      string = 'images'

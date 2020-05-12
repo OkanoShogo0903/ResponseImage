@@ -1,30 +1,51 @@
 <template>
   <v-container>
     <v-form ref="form" v-model="valid" lazy-validation>
-      <v-select
-        v-model="select_charactor"
-        :items="candidate_charactor"
-        :rules="[v => !!v || 'Item is required']"
-        label="キャラクターを指定してください"
-      ></v-select>
+      <v-row align="center">
+        <v-col cols="12" sm="6">
+          <v-subheader v-text="'キャラクターを指定してください'"></v-subheader>
+        </v-col>
 
-      <v-text-field
-        v-model="new_charactor"
-        :rules= "[
-          v => !!v || '追加するキャラクター名を入力してください',
-          v => (v && v.length <= 15) || 'キャラクター名は15文字以下にしてください'
-        ]"
-        :counter="15"
-        label="新しく追加するキャラクター名"
-      ></v-text-field>
+        <v-col cols="12" sm="6">
+          <v-select
+            v-model="select_charactor"
+            :items="candidate_charactor"
+            :rules="[v => !!v || 'Item is required']"
+            label="キャラクター"
+          ></v-select>
+        </v-col>
 
-      <v-select
-        v-model="select_genre"
-        :items="candidate_genre"
-        :rules="[v => !!v || 'Item is required']"
-        label="ジャンルを指定してください"
-        required
-      ></v-select>
+        <div v-if="select_charactor === add_phrase">
+          <v-col cols="12" sm="6">
+            <v-subheader v-text="'新しく追加するキャラクター名'"></v-subheader>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="new_charactor"
+              :rules= "[
+                v => !!v,
+                v => (v && v.length <= 15) || 'キャラクター名は15文字以下にしてください'
+              ]"
+              :counter="15"
+              label="キャラクター"
+            ></v-text-field>
+          </v-col>
+        </div>
+
+        <v-col cols="12" sm="6">
+          <v-subheader v-text="'ジャンルを指定する'"></v-subheader>
+        </v-col>
+
+        <v-col cols="12" sm="6">
+          <MultiSelect
+            v-model="select_genre"
+            :items="candidate_genre"
+            label_="ジャンル"
+            max_select="3"
+          />
+        </v-col>
+
+      </v-row>
 
       <v-checkbox
         v-model="checkbox"
@@ -54,10 +75,12 @@
   import { Component, Vue } from 'vue-property-decorator';
 
   import { getAllGenre, getAllCharactor, pressUploadUrl } from '@/common/Api';
+  import MultiSelect from '@/components/MultiSelect.vue';
 
   @Component({
     components: {
       vueDropzone: vue2Dropzone,
+      MultiSelect,
     },
   })
 
@@ -76,8 +99,8 @@
     public candidate_charactor: string[] = Array();
     public candidate_genre: string[] = Array();
 
-    public select_charactor: ( string | null ) = null;
-    public select_genre: ( string | null )[] = ["あいさつ", null, null];
+    public select_charactor: ( string | null ) = this.none_phrase; // デフォルトで選択なし
+    public select_genre: ( string | null )[] = Array();
 
     public dropzoneOptions: any = {
       url: pressUploadUrl(this.select_charactor, this.select_genre),
@@ -99,7 +122,6 @@
     };
 
     public created () {
-      console.log( this.add_phrase )
       this.candidate_charactor = getAllCharactor();
       this.candidate_charactor.unshift(this.add_phrase)
       this.candidate_charactor.push(this.none_phrase)
