@@ -9,7 +9,7 @@ export default new Router({
   routes: [
     { 
       path: '/',
-      name: 'image',
+      name: 'top',
       props: {genre: null},
       component: ImagePlace,
     },
