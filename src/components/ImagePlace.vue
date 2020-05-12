@@ -1,20 +1,18 @@
 <template>
-  <v-container fluid>
-
-    {{ selected_genre }}
-
-    <v-row>
-      <v-col v-for="url in urls" cols="4">
-        <ImageFrame :url="url" />
-      </v-col>
-    </v-row>
-  </v-container>
-
+  <div>
+    <v-container>
+      <v-row>
+        <v-col v-for="url in urls" cols="4">
+          <ImageFrame :url="url" />
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script lang="ts">
   import {getImageUrl, getAllImageUrl ,getAllGenre } from '@/common/Api';
-  import {Component, Watch, Vue} from "vue-property-decorator";
+  import {Component, Prop, Watch, Vue} from "vue-property-decorator";
   import ImageFrame from "@/components/ImageFrame.vue";
 
   @Component({
@@ -25,16 +23,30 @@
   export default class ImagePlace extends Vue {
     private urls: string[] = new Array();
 
-    public selected_genre: ( string | null ) = null
+    @Prop()
+    public genre?: ( string | null );
 
     // ページ遷移時に画像をリクエストしているが、これはSPAとして正しいのか?
-    @Watch('$route.params') // 読み込んでないと分からない書き方なので、ライフサイクルのページ遷移をフックして読み込むとかにした方が良さそう。もしくはvue-routerのprop?
-    onTextChanged(new_selected_genre: string, old: string) {
-      this.urls = getImageUrl(new_selected_genre)
+    @Watch('genre')
+    onRouterChanged(to: string, from: string) {
+      console.log("Watch")
+      if (to !== from) {
+        this.updatePage(this.genre)
+      }
     }
 
-    public created(){
-      this.urls = getAllImageUrl()
+    created(){
+      console.log("Created")
+      this.updatePage(this.genre)
+    }
+
+    private updatePage(g: (string | null | undefined) ){
+      if ( g === "all" || g === null || g === undefined ){
+        this.urls = getAllImageUrl()
+      }
+      else{
+        this.urls = getImageUrl(g)
+      }
     }
   }
 </script>

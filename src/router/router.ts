@@ -1,24 +1,28 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-
+import ImagePlace from '@/components/ImagePlace.vue';
+import UploadPlace from '@/components/UploadPlace.vue';
 Vue.use(Router);
 
 export default new Router({
   mode: 'history',
   routes: [
+    { 
+      path: '/',
+      name: 'image',
+      props: {genre: null},
+      component: ImagePlace,
+    },
     {
       path: '/image/:genre',
-      name: 'images',
+      name: 'image',
       props: true,
-      component: () => import('@/components/ImagePlace.vue'),
+      component: ImagePlace,
     },
     {
       path: '/upload',
       name: 'upload',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('@/components/UploadPlace.vue'),
+      component: UploadPlace ,
     },
   ],
 });
