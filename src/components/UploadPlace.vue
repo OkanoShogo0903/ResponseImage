@@ -15,25 +15,23 @@
           ></v-select>
         </v-col>
 
-        <div v-if="select_charactor === add_phrase">
-          <v-col cols="12" sm="6">
-            <v-subheader v-text="'新しく追加するキャラクター名'"></v-subheader>
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-text-field
-              v-model="new_charactor"
-              :rules= "[
-                v => !!v,
-                v => (v && v.length <= 15) || 'キャラクター名は15文字以下にしてください'
-              ]"
-              :counter="15"
-              label="キャラクター"
-            ></v-text-field>
-          </v-col>
-        </div>
+        <v-col cols="12" sm="6" v-if="select_charactor === add_phrase">
+          <v-subheader v-text="'新しく追加するキャラクター名'"></v-subheader>
+        </v-col>
+        <v-col cols="12" sm="6" v-if="select_charactor === add_phrase">
+          <v-text-field
+            v-model="new_charactor"
+            :rules= "[
+              v => !!v,
+              v => (v && v.length <= 15) || 'キャラクター名は15文字以下にしてください'
+            ]"
+            :counter="15"
+            label="キャラクター"
+          ></v-text-field>
+        </v-col>
 
         <v-col cols="12" sm="6">
-          <v-subheader v-text="'ジャンルを指定する'"></v-subheader>
+          <v-subheader v-text="'ジャンルを指定してください'"></v-subheader>
         </v-col>
 
         <v-col cols="12" sm="6">
@@ -43,6 +41,9 @@
             label_="ジャンル"
             max_select="3"
           />
+          <v-btn class="mx-2" fab dark color="indigo">
+            <v-icon dark>mdi-plus</v-icon>
+          </v-btn>
         </v-col>
 
       </v-row>
