@@ -6,9 +6,10 @@
         <v-col v-for="url in urls" cols="4">
           <ImageFrame
             :url="url"
-            :is_fav="true"
+            :is_fav="false"
             :is_copy="true"
-            @click="$refs.footer.anime();"
+            @image-click="$refs.footer.anime();"
+            @fav-click="favClicked();"
           />
         </v-col>
       </v-row>
@@ -29,6 +30,7 @@
     },
   })
   export default class ImagePlace extends Vue {
+    // TODO: URLではなく、レスポンシブをそのままjsonバインドしたImageオブジェクトをPropで受け渡すことにする
     private urls: string[] = new Array();
     private selected_img: any;
 
@@ -46,6 +48,14 @@
 
     created(){
       this.updatePage(this.genre)
+    }
+
+    private favClicked(){
+      console.log("favClicked API!")
+      // TODO: FavのAPI実装
+      // サーバサイドの簡略化のため、boolの反転ではなくsetにした
+      // フロントで取り敢えず属性を変えて、遅れてサーバに反映
+      // api.setFavorite(img[x].id, !this.is_fav) 
     }
 
     private updatePage(g: (string | null | undefined) ){

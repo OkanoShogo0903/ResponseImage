@@ -3,7 +3,7 @@
       class="image"
       :src="url"
       :class="{ animation: is_anime }"
-      v-on:click="anime();$emit('click');"
+      v-on:click="$emit('image-click'); anime();"
     > 
       <!--
       <template v-slot:placeholder>
@@ -17,7 +17,10 @@
       </template>
       -->
       
-      <Favorite v-if="is_fav!=undefined" v-on:click.stop/>
+      <Favorite
+        @fav-click="$emit('fav-click');"
+        :is_fav="is_fav"
+      />
     </v-img>
 </template>
 
@@ -34,7 +37,7 @@
     @Prop()
     public url!: string;
     @Prop()
-    public is_fav?: Boolean;
+    public is_fav!: Boolean;
     @Prop()
     public is_copy?: Boolean;
 
@@ -42,6 +45,11 @@
     private is_anime: Boolean = false;
     private wait_ms: number = 250;
     private interval: any = null;
+
+    private fav(){
+      console.log("fav!!")
+      this.is_fav = !this.is_fav
+    }
 
     public anime(){
       if (this.is_anime === true || this.interval !== null) {

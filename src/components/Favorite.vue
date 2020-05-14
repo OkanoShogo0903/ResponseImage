@@ -1,7 +1,12 @@
 <template>
-    <v-btn v-if="is_fav" icon color="pink" @onClick="clicked">
-      <v-icon>mdi-heart</v-icon>
-    </v-btn>
+  <v-btn
+    icon
+    class="common"
+    :class="is_fav ? 'front' : 'back' "
+    v-on:click.stop="$emit('fav-click'); click();"
+    >
+    <v-icon>mdi-heart</v-icon>
+  </v-btn>
 </template>
 
 <script lang="ts">
@@ -10,16 +15,24 @@
   @Component
   export default class ImageFrame extends Vue {
     @Prop()
-    public url!: string;
-    @Prop()
-    public is_fav!: Boolean;
-
-    // @Emit
-    private clicked(){
-      console.log("clicked")
+    public is_fav?: Boolean; // 手軽に使えるように?にした。undefinedのときの色はback_colorになる。
+    click(){
+      console.log("1")
     }
   }
 </script>
 
 <style scoped>
+.common{
+  position:absolute;
+  top: -4px;
+  right:-4px;
+}
+.front{
+  color:E03B5E;
+}
+.back{
+  color:BDBDBD;
+  opacity: 0.4;
+}
 </style>
