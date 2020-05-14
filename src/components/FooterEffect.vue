@@ -1,5 +1,5 @@
 <template>
-  <div id="footer">
+  <div id="footer" :class="{ animation: is_anime }">
     <div id="text"> <slot></slot> </div>
   </div>
 </template>
@@ -8,6 +8,24 @@
   import {Component, Vue} from "vue-property-decorator";
   @Component
   export default class TextEffect extends Vue {
+    // Footer Animation.
+    private is_anime: Boolean = false;
+    private wait_ms: number = 1500;
+    private interval: any = null;
+
+    public anime(){
+      console.log("animation")
+      if (this.is_anime === true || this.interval !== null) {
+        return
+      }
+      this.is_anime = true
+      this.interval = setInterval(() => {
+        this.is_anime = false
+        clearInterval(this.interval)
+        this.interval = null
+      }, this.wait_ms)
+    }
+
   }
 </script>
 
@@ -20,20 +38,22 @@ div#footer
   width: 100%;
   height: 0px;
   background-color:#444;     /* 背景色(黒) */
+}
 
+div#text { 
+  color: #fff;
+  font-size: 18px;
+  padding: 10px;
+    margin: auto;              /* 中央揃え */
+}
+
+.animation {
   animation-direction: normal;
   animation-duration: 1.5s;
   animation-name: fade_in_and_out;
   animation-timing-function: forward;
 }
  
-div#text { 
-  color: #fff;
-  font-size: 18px;
-  padding: 10px;
-	margin: auto;              /* 中央揃え */
-}
-
 @keyframes fade_in_and_out {
   0%   { 
     height: 0px;

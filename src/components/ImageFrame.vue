@@ -2,7 +2,8 @@
     <v-img
       class="image"
       :src="url"
-      v-on:click="$listeners['parentMethod']"
+      :class="{ animation: is_anime }"
+      v-on:click="anime();$emit('click');"
     > 
       <!--
       <template v-slot:placeholder>
@@ -36,6 +37,23 @@
     public is_fav?: Boolean;
     @Prop()
     public is_copy?: Boolean;
+
+    // Image Animation.
+    private is_anime: Boolean = false;
+    private wait_ms: number = 250;
+    private interval: any = null;
+
+    public anime(){
+      if (this.is_anime === true || this.interval !== null) {
+        return
+      }
+      this.is_anime = true
+      this.interval = setInterval(() => {
+        this.is_anime = false
+        clearInterval(this.interval)
+        this.interval = null
+      }, this.wait_ms)
+    }
   }
 </script>
 
