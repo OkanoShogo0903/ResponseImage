@@ -37,14 +37,14 @@ div#footer
   left: 0px;
   width: 100%;
   height: 0px;
-  background-color:#444;     /* 背景色(黒) */
+  background-color:#1DA1F2;     /* フッターの色 */
 }
 
 div#text { 
   color: #fff;
   font-size: 18px;
   padding: 10px;
-    margin: auto;              /* 中央揃え */
+  margin: auto;              /* 中央揃え */
 }
 
 .animation {
