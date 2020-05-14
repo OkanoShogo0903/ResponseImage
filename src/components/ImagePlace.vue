@@ -51,7 +51,6 @@
     }
 
     private favClicked(){
-      console.log("favClicked API!")
       // TODO: FavのAPI実装
       // サーバサイドの簡略化のため、boolの反転ではなくsetにした
       // フロントで取り敢えず属性を変えて、遅れてサーバに反映
