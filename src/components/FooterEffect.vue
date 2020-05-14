@@ -14,7 +14,6 @@
     private interval: any = null;
 
     public anime(){
-      console.log("animation")
       if (this.is_anime === true || this.interval !== null) {
         return
       }
