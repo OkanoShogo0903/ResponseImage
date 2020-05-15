@@ -13,7 +13,7 @@
     private wait_ms: number = 1500;
     private interval: any = null;
 
-    public anime(){
+    public anime():void{
       if (this.is_anime === true || this.interval !== null) {
         return
       }

@@ -61,7 +61,7 @@
         id="dropzone"
         :options="dropzoneOptions"
         @vdropzone-complete="submitted"
-        @vdropzone-max-files-reached="checkSubmitValid()"
+        @vdropzone-max-files-reached="drop_length=$refs.myDropzone.getQueuedFiles().length; checkSubmitValid()"
         >
       </vue-dropzone>
 
@@ -105,6 +105,9 @@
   export default class Navigation extends Vue {
     // TODO: アップロードゾーンとアップロードボタンを別に用意する
     // TODO: キャラクター一覧のドロップダウンから選択できるようにする
+    $refs!: { // typescriptは子の関数も型が分からないとキレるので.
+        effect: FooterEffect,
+    }
 
     public is_valid: ( Boolean | null ) = false;
     public is_checkbox: Boolean = false;
@@ -121,6 +124,8 @@
     public select_genre: string[] = Array();
     public max_select: number = 3;
 
+    private drop_length: number = 0;
+
     private effect_text: (string | null) = null;
 
     private image_queue_length: number = 0;
@@ -136,7 +141,7 @@
       if (this.select_genre.length > 0) {
         if (this.select_genre.length <= this.max_select) {
           if (this.is_checkbox) {
-            if ( this.$refs.myDropzone.getQueuedFiles().length > 0 ) {
+            if ( this.drop_length > 0 ) {
               this.is_valid = true;
               return
             }
@@ -155,8 +160,10 @@
       this.candidate_genre.push(this.add_phrase)
     };
 
-    private submitted(res){
-      if (res.status === 200) { // res.ok でチェックするとundefinedになるので、200かどうかでチェックしとく
+    private submitted(res: any){
+      console.log(res)
+      console.log(res.status)
+      if (res.status === "success") { // res.ok でチェックするとundefinedになるので、200かどうかでチェックしとく
         this.effect_text = "Uploaded"
       }
       else {
@@ -165,7 +172,7 @@
       this.$refs.effect.anime(); // アニメーション開始
 
       var that = this
-      setTimeout(that.reload(that), 2500); // アニメーションが終わったころにリロード
+      setTimeout( function(){that.reload(that)}, 2000); // アニメーションが終わったころにリロード
     }
 
     private reload(that: any) {
