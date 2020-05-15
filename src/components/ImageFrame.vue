@@ -47,7 +47,6 @@
     private interval: any = null;
 
     private fav(){
-      console.log("fav!!")
       this.is_fav = !this.is_fav
     }
 

@@ -1,6 +1,6 @@
 <template>
   <v-select
-    v-model="selects"
+    v-model="value"
     :items="items"
     label="label"
     multiple
@@ -8,7 +8,7 @@
     persistent-hint
     deletable-chips
     :hint="max_select+'つまで選択可能'"
-    :error="selects.length > max_select"
+    :error="value.length > max_select"
   ></v-select>
 </template>
 
@@ -22,24 +22,20 @@
   export default class MultiSelect extends Vue {
 
     @Prop()
+    public value!: string[];
+    @Prop()
     public items!: string[];
     @Prop()
-    public label_?: string;
-    @Prop()
     public max_select!: number;
+    @Prop()
+    public label_?: string;
 
-    public selects: string[] = Array();
     //public is_error: Boolean = false;
 
-    @Watch('selects')
-    @Emit()
-    public changed(s: (string | null)[] ){
-      console.log(this.selects.length > this.max_select)
-      //this.is_error ? this.selects.length > this.max_select
-    }
-
-    public created(){
-      console.log(this.max_select)
+    @Watch('value')
+    public changed(s: (string)[] ){
+      console.log(s)
+      this.$emit('input', s)
     }
   }
 </script>

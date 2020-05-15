@@ -57,10 +57,10 @@ div#text {
   0%   { 
     height: 0px;
   }
-  30%   {
+  25%   {
     height: 50px;
   }
-  70%   {
+  75%   {
     height: 50px;
   }
   100%   {

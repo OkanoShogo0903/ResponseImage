@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-form ref="form" v-model="valid" lazy-validation>
+    <v-form ref="form" lazy-validation>
       <v-row align="center">
         <v-col cols="12" sm="6">
           <v-subheader v-text="'キャラクターを指定してください'"></v-subheader>
@@ -35,31 +35,47 @@
         </v-col>
 
         <v-col cols="12" sm="6">
-          <MultiSelect
+          <v-select
+            multiple
+            label="ジャンル"
             v-model="select_genre"
             :items="candidate_genre"
-            label_="ジャンル"
-            max_select="3"
+            :hint="max_select+'つまで選択可能'"
+            :error="select_genre.length > max_select"
+            chips
+            persistent-hint
+            deletable-chips
+            v-on:change="checkSubmitValid();"
           />
+          <!--
           <v-btn class="mx-2" fab dark color="indigo">
             <v-icon dark>mdi-plus</v-icon>
           </v-btn>
+          -->
         </v-col>
-
       </v-row>
 
-      <v-checkbox
-        v-model="checkbox"
-        :rules="[v => !!v || 'You must check to continue!']"
-        label="R18コンテンツではありません"
-        required
-      ></v-checkbox>
+      <vue-dropzone
+        v-if="dropzoneOptions"
+        ref="myDropzone"
+        id="dropzone"
+        :options="dropzoneOptions"
+        @vdropzone-complete="submitted"
+        @vdropzone-max-files-reached="checkSubmitValid()"
+        >
+      </vue-dropzone>
 
-      <vue-dropzone v-if="dropzoneOptions" ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
+      <v-checkbox
+        v-model="is_checkbox"
+        :rules="[v => !!v || 'You must check to continue!']"
+        v-on:change="checkSubmitValid();"
+        label="R18コンテンツではありません"
+        required >
+      </v-checkbox>
 
       <v-btn
-        :disabled="!valid"
-        @click="submit"
+        :disabled="!is_valid"
+        @click="$refs.myDropzone.processQueue();"
         class=submit_btn
       >
         画像を投稿
@@ -67,21 +83,22 @@
 
     </v-form>
 
+    <FooterEffect ref="effect"> {{ effect_text }} </FooterEffect>
   </v-container>
 </template>
 
 <script lang="ts">
   import vue2Dropzone from 'vue2-dropzone';
   import 'vue2-dropzone/dist/vue2Dropzone.min.css';
-  import { Component, Vue } from 'vue-property-decorator';
+  import { Component, Watch, Vue } from 'vue-property-decorator';
 
+  import FooterEffect from "@/components/FooterEffect.vue";
   import { getAllGenre, getAllCharactor, pressUploadUrl } from '@/common/Api';
-  import MultiSelect from '@/components/MultiSelect.vue';
 
   @Component({
     components: {
+      FooterEffect,
       vueDropzone: vue2Dropzone,
-      MultiSelect,
     },
   })
 
@@ -89,8 +106,8 @@
     // TODO: アップロードゾーンとアップロードボタンを別に用意する
     // TODO: キャラクター一覧のドロップダウンから選択できるようにする
 
-    public valid: ( Boolean | null ) = true;
-    public checkbox: Boolean = false;
+    public is_valid: ( Boolean | null ) = false;
+    public is_checkbox: Boolean = false;
 
     private new_charactor: ( String | null ) = null;
 
@@ -100,26 +117,33 @@
     public candidate_charactor: string[] = Array();
     public candidate_genre: string[] = Array();
 
-    public select_charactor: ( string | null ) = this.none_phrase; // デフォルトで選択なし
-    public select_genre: ( string | null )[] = Array();
+    public select_charactor: string = this.none_phrase; // デフォルトで選択なし
+    public select_genre: string[] = Array();
+    public max_select: number = 3;
 
+    private effect_text: (string | null) = null;
+
+    private image_queue_length: number = 0;
     public dropzoneOptions: any = {
       url: pressUploadUrl(this.select_charactor, this.select_genre),
       method: 'put',
+      maxFiles: 1,
       maxFilesize: 5,
+      autoProcessQueue: false,
     };
 
-    private submit () {
-      console.log("pressed submit")
-        /*
-        if ( this.$refs.form.validate() ) {
-          axios.post('/api/submit', {
-            charactor: this.select_charactor,
-            genre_primary: this.select_genre,
-            ....
-          })
+    private checkSubmitValid () {
+      if (this.select_genre.length > 0) {
+        if (this.select_genre.length <= this.max_select) {
+          if (this.is_checkbox) {
+            if ( this.$refs.myDropzone.getQueuedFiles().length > 0 ) {
+              this.is_valid = true;
+              return
+            }
+          }
         }
-        */
+      }
+      this.is_valid = false;
     };
 
     public created () {
@@ -130,6 +154,23 @@
       this.candidate_genre = getAllGenre();
       this.candidate_genre.push(this.add_phrase)
     };
+
+    private submitted(res){
+      if (res.status === 200) { // res.ok でチェックするとundefinedになるので、200かどうかでチェックしとく
+        this.effect_text = "Uploaded"
+      }
+      else {
+        this.effect_text = "Failed"
+      }
+      this.$refs.effect.anime(); // アニメーション開始
+
+      var that = this
+      setTimeout(that.reload(that), 2500); // アニメーションが終わったころにリロード
+    }
+
+    private reload(that: any) {
+        that.$router.go({path: that.$router.currentRoute.path, force: true});
+    }
   }
 </script>
 
