@@ -9,6 +9,7 @@
   @Component
   export default class TextEffect extends Vue {
     // Footer Animation.
+    // TODO: もうちょっと派手にする
     private is_anime: Boolean = false;
     private wait_ms: number = 1500;
     private interval: any = null;

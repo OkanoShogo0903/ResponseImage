@@ -1,12 +1,27 @@
 <template>
   <v-container>
     <v-form ref="form" lazy-validation>
-      <v-row align="center">
+      <v-row justify="space-around" align="center" class="space">
+        <v-col cols="12" sm="6" class="space">
+          <v-subheader v-text="'画像を選択してください'"></v-subheader>
+        </v-col>
         <v-col cols="12" sm="6">
-          <v-subheader v-text="'キャラクターを指定してください'"></v-subheader>
+          <vue-dropzone
+            v-if="dropzoneOptions"
+            ref="myDropzone"
+            class="space"
+            id="dropzone"
+            :options="dropzoneOptions"
+            @vdropzone-complete="submitted"
+            @vdropzone-max-files-reached="drop_length=$refs.myDropzone.getQueuedFiles().length; checkSubmitValid()"
+            >
+          </vue-dropzone>
         </v-col>
 
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="6" class="space">
+          <v-subheader v-text="'キャラクターを指定してください'"></v-subheader>
+        </v-col>
+        <v-col cols="12" sm="6" class="space">
           <v-select
             v-model="select_charactor"
             :items="candidate_charactor"
@@ -15,10 +30,10 @@
           ></v-select>
         </v-col>
 
-        <v-col cols="12" sm="6" v-if="select_charactor === add_phrase">
+        <v-col cols="12" sm="6" class="space" v-if="select_charactor === add_phrase">
           <v-subheader v-text="'新しく追加するキャラクター名'"></v-subheader>
         </v-col>
-        <v-col cols="12" sm="6" v-if="select_charactor === add_phrase">
+        <v-col cols="12" sm="6" class="space" v-if="select_charactor === add_phrase">
           <v-text-field
             v-model="new_charactor"
             :rules= "[
@@ -29,12 +44,13 @@
             label="キャラクター"
           ></v-text-field>
         </v-col>
+        <!-- TODO: ユーザが直接入力できるフォームは記号を許さないように制約をかける -->
 
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="6" class="space">
           <v-subheader v-text="'ジャンルを指定してください'"></v-subheader>
         </v-col>
 
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="6" class="space">
           <v-select
             multiple
             label="ジャンル"
@@ -53,25 +69,20 @@
           </v-btn>
           -->
         </v-col>
+
+        <v-checkbox
+          class="space"
+          v-model="is_checkbox"
+          :rules="[v => !!v || 'You must check to continue!']"
+          v-on:change="checkSubmitValid();"
+          label="R18コンテンツではありません"
+          required >
+        </v-checkbox>
       </v-row>
 
-      <vue-dropzone
-        v-if="dropzoneOptions"
-        ref="myDropzone"
-        id="dropzone"
-        :options="dropzoneOptions"
-        @vdropzone-complete="submitted"
-        @vdropzone-max-files-reached="drop_length=$refs.myDropzone.getQueuedFiles().length; checkSubmitValid()"
-        >
-      </vue-dropzone>
-
-      <v-checkbox
-        v-model="is_checkbox"
-        :rules="[v => !!v || 'You must check to continue!']"
-        v-on:change="checkSubmitValid();"
-        label="R18コンテンツではありません"
-        required >
-      </v-checkbox>
+      <div class="warning_text">
+        投稿された画像はユーザ情報と共に保存されます。
+      </div>
 
       <v-btn
         :disabled="!is_valid"
@@ -182,6 +193,12 @@
 </script>
 
 <style scoped>
+.space {
+  padding: 30px;
+}
+.warning_text{
+  font-size: 11px;
+}
 .submit_btn {
   margin: 30px;
   width:20%; height:100%;

@@ -34,9 +34,7 @@
 
       <v-list-item-content @click="onAllGenreClick();" link>
         <v-list-item-title>
-        <v-btn>
-          人気順
-        </v-btn>
+        <v-btn> 人気順 </v-btn>
         </v-list-item-title>
       </v-list-item-content>
 
@@ -44,9 +42,15 @@
 
       <v-list-item-content @click="onAllGenreClick();" link>
         <v-list-item-title>
-        <v-btn>
-          お気に入り
-        </v-btn>
+        <v-btn> お気に入り </v-btn>
+        </v-list-item-title>
+      </v-list-item-content>
+
+      <v-divider></v-divider>
+
+      <v-list-item-content @click="onAllGenreClick();" link>
+        <v-list-item-title>
+        <v-btn> ユーザのアップロード画像 </v-btn>
         </v-list-item-title>
       </v-list-item-content>
 
