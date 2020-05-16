@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import ImagePlace from '@/components/ImagePlace.vue';
-import UploadPlace from '@/components/UploadPlace.vue';
+import ImagePage from '@/pages/ImagePage.vue';
+import UploadPage from '@/pages/UploadPage.vue';
 Vue.use(Router);
 
 export default new Router({
@@ -11,18 +11,18 @@ export default new Router({
       path: '/',
       name: 'top',
       props: {genre: null},
-      component: ImagePlace,
+      component: ImagePage,
     },
     {
       path: '/image/:genre',
       name: 'image',
       props: true,
-      component: ImagePlace,
+      component: ImagePage,
     },
     {
       path: '/upload',
       name: 'upload',
-      component: UploadPlace ,
+      component: UploadPage ,
     },
   ],
 });

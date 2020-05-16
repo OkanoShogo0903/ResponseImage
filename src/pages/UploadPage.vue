@@ -38,10 +38,10 @@
             v-model="new_charactor"
             :rules= "[
               v => !!v,
-              v => (v && v.length <= 15) || 'キャラクター名は15文字以下にしてください'
+              v => (v && v.length <= 15) || '15文字以下にしてください'
             ]"
             :counter="15"
-            label="キャラクター"
+            label="ジャンル"
           ></v-text-field>
         </v-col>
         <!-- TODO: ユーザが直接入力できるフォームは記号を許さないように制約をかける -->
@@ -70,6 +70,25 @@
           -->
         </v-col>
 
+        <v-col cols="12" sm="6" class="space" v-if="select_charactor.indexOf(add_phrase) >= 0">
+          <v-subheader v-text="'新しく追加するジャンル名'"></v-subheader>
+          <div class="warning_text">
+            新しいジャンルはひとつだけ追加できます
+          </div>
+        </v-col>
+        <v-col cols="12" sm="6" class="space" v-if="select_charactor.indexOf(add_phrase) >= 0">
+          <v-text-field
+            v-model="new_genre"
+            :rules= "[
+              v => !!v,
+              v => (v && v.length <= 15) || '15文字以下にしてください'
+            ]"
+            :counter="15"
+            v-on:change="checkSubmitValid();"
+            label="キャラクター"
+          ></v-text-field>
+        </v-col>
+
         <v-checkbox
           class="space"
           v-model="is_checkbox"
@@ -86,7 +105,10 @@
 
       <v-btn
         :disabled="!is_valid"
-        @click="$refs.myDropzone.processQueue();"
+        @click="
+          $refs.myDropzone.setOption('url', pressDropzoneUrl());
+          $refs.myDropzone.processQueue();
+          "
         class=submit_btn
       >
         画像を投稿
@@ -123,9 +145,10 @@
     public is_valid: ( Boolean | null ) = false;
     public is_checkbox: Boolean = false;
 
-    private new_charactor: ( String | null ) = null;
+    private new_charactor: string = "";
+    private new_genre: string = "";
 
-    public none_phrase: string = '選択しない';
+    public none_phrase: string = '選択しない'; // TODO: この辺の変数郡はobjectとしてまとめた方が分かりやすい。特にcandidateとselectみたいなサーバに投げられる要素はひとまとまりにしておいた方がいい。
     public add_phrase: string = '新しく追加する';
 
     public candidate_charactor: string[] = Array();
@@ -141,7 +164,7 @@
 
     private image_queue_length: number = 0;
     public dropzoneOptions: any = {
-      url: pressUploadUrl(this.select_charactor, this.select_genre),
+      url: ".", // URLが""だと正常に動作しないので雑に入れておく
       method: 'put',
       maxFiles: 1,
       maxFilesize: 5,
@@ -163,6 +186,9 @@
     };
 
     public created () {
+      // TODO: 何度もGETを送るのは良くないので、親からPropしてもらおう。
+      // それで親が定期的にサーバにリクエストして最新情報に更新するとか。
+      // 選択肢をサーバから得る
       this.candidate_charactor = getAllCharactor();
       this.candidate_charactor.unshift(this.add_phrase)
       this.candidate_charactor.push(this.none_phrase)
@@ -171,11 +197,28 @@
       this.candidate_genre.push(this.add_phrase)
     };
 
+    private pressDropzoneUrl(): string{
+      // アップロードするためのURLを発行する役割。
+      // 新しくキャラクターやジャンルが作られていたら、
+      // '新しく追加する'という文字列を'新しい名称'に置き換える。
+      var c: string = this.select_charactor;
+      var g: string[] = this.select_genre;
+      if (c === this.add_phrase) {
+        c = this.new_charactor;
+      }
+      if (g.indexOf(this.add_phrase) >= 0) {
+        g.splice(g.indexOf(this.add_phrase), 1);
+        g.push(this.new_genre);
+      }
+
+      var url = pressUploadUrl(c, g)
+      this.dropzoneOptions.url = url
+      return url
+    }
+
     private submitted(res: any){
-      console.log(res)
-      console.log(res.status)
       if (res.status === "success") { // res.ok でチェックするとundefinedになるので、200かどうかでチェックしとく
-        this.effect_text = "Uploaded"
+        this.effect_text = "Uploaded" // TODO: こんなところにハードコードしてるのは無いな
       }
       else {
         this.effect_text = "Failed"
@@ -183,7 +226,7 @@
       this.$refs.effect.anime(); // アニメーション開始
 
       var that = this
-      setTimeout( function(){that.reload(that)}, 2000); // アニメーションが終わったころにリロード
+      //setTimeout( function(){that.reload(that)}, 2000); // アニメーションが終わったころにリロード
     }
 
     private reload(that: any) {
