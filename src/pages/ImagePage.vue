@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-  import {getImageUrl, getAllImageUrl ,getAllGenre } from '@/common/Api';
+  import {getImageUrl, getAllImageUrl } from '@/common/Api';
   import {Component, Prop, Watch, Vue} from "vue-property-decorator";
   import ImageFrame from "@/components/ImageFrame.vue";
   import FooterEffect from "@/components/FooterEffect.vue";
@@ -35,7 +35,7 @@
     private selected_img: any;
 
     @Prop()
-    public genre?: ( string | null );
+    public genre!: ( string | null );
 
     // 画像のロード関連
     // TODO: ページ遷移時に画像をリクエストしているが、これはSPAとして正しいのか?
@@ -57,8 +57,8 @@
       // api.setFavorite(img[x].id, !this.is_fav) 
     }
 
-    private updatePage(g: (string | null | undefined) ){
-      if ( g === "all" || g === null || g === undefined ){
+    private updatePage(g: (string | null) ){
+      if ( g === "all" || g === null ){
         this.urls = getAllImageUrl()
       }
       else{
