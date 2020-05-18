@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import ImagePage from '@/pages/ImagePage.vue';
 import UploadPage from '@/pages/UploadPage.vue';
+import { getAllGenre, getAllCharactor } from '@/common/Api';
 Vue.use(Router);
 
 export default new Router({
@@ -22,6 +23,10 @@ export default new Router({
     {
       path: '/upload',
       name: 'upload',
+      props: {
+        candidate_charactor: getAllCharactor(),
+        candidate_genre: getAllGenre(),
+      },
       component: UploadPage ,
     },
   ],

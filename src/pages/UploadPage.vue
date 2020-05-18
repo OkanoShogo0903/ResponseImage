@@ -121,12 +121,14 @@
 </template>
 
 <script lang="ts">
+  import PropType from 'vue'
+
   import vue2Dropzone from 'vue2-dropzone';
   import 'vue2-dropzone/dist/vue2Dropzone.min.css';
-  import { Component, Watch, Vue } from 'vue-property-decorator';
+  import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
 
   import FooterEffect from "@/components/FooterEffect.vue";
-  import { getAllGenre, getAllCharactor, pressUploadUrl } from '@/common/Api';
+  import { pressUploadUrl } from '@/common/Api';
 
   @Component({
     components: {
@@ -151,11 +153,14 @@
     public none_phrase: string = '選択しない'; // TODO: この辺の変数郡はobjectとしてまとめた方が分かりやすい。特にcandidateとselectみたいなサーバに投げられる要素はひとまとまりにしておいた方がいい。
     public add_phrase: string = '新しく追加する';
 
-    public candidate_charactor: string[] = Array();
-    public candidate_genre: string[] = Array();
+    @Prop()
+    private candidate_charactor!: string[];
+    @Prop()
+    private candidate_genre!: string[];
 
     public select_charactor: string = this.none_phrase; // デフォルトで選択なし
     public select_genre: string[] = Array();
+
     public max_select: number = 3;
 
     private drop_length: number = 0;
@@ -186,14 +191,9 @@
     };
 
     public created () {
-      // TODO: 何度もGETを送るのは良くないので、親からPropしてもらおう。
-      // それで親が定期的にサーバにリクエストして最新情報に更新するとか。
-      // 選択肢をサーバから得る
-      this.candidate_charactor = getAllCharactor();
       this.candidate_charactor.unshift(this.add_phrase)
       this.candidate_charactor.push(this.none_phrase)
 
-      this.candidate_genre = getAllGenre();
       this.candidate_genre.push(this.add_phrase)
     };
 
