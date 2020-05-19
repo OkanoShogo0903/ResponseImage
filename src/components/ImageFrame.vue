@@ -1,27 +1,42 @@
 <template>
-    <v-img
-      class="image"
-      :src="url"
-      :class="{ animation: is_anime }"
-      v-on:click="$emit('image-click'); anime();"
-    > 
+  <div>
       <!--
-      <template v-slot:placeholder>
-        <v-row
-          class="fill-height ma-0"
-          align="center"
-          justify="center"
-        >
-          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-        </v-row>
-      </template>
+      <v-img
+        class="image"
+        :src="url"
+        :class="{ animation: is_anime }"
+        v-on:click="$emit('image-click'); anime(); copy();"
+      > 
+        <template v-slot:placeholder>
+          <v-row
+            class="fill-height ma-0"
+            align="center"
+            justify="center"
+          >
+            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+          </v-row>
+        </template>
+        
+        <Favorite
+          @fav-click="$emit('fav-click');"
+          :is_fav="is_fav"
+        />
+      </v-img>
       -->
-      
-      <Favorite
-        @fav-click="$emit('fav-click');"
-        :is_fav="is_fav"
-      />
-    </v-img>
+
+      <img
+        id="copy_able"
+        class="image"
+        :class="{ animation: is_anime }"
+        src="@/assets/logo.png"
+        v-on:click="$emit('image-click'); anime(); copy('copy_able');"
+        >
+      </img>
+
+      <p>
+        <canvas id="test_canvas" width=256 height=256 style="border: 1px solid;"></canvas>
+      </p>
+    </div>
 </template>
 
 <script lang="ts">
@@ -60,6 +75,25 @@
         clearInterval(this.interval)
         this.interval = null
       }, this.wait_ms)
+    }
+
+    public copy(id: string) {
+      var el: Element = document.getElementById(id)!
+      
+      // 空のCanvas作成
+      var canvas: Element = document.createElement('canvas');
+      canvas.width = el.naturalWidth;
+      canvas.height = el.naturalHeight;
+
+      // Canvasにコピーしたい画像を貼り付ける
+      canvas.getContext('2d').drawImage(el, 0, 0);
+
+      // CanvasをBlobに変換してクリップボードに貼り付け
+      canvas.toBlob(blob => {
+          navigator.clipboard.write([
+              new ClipboardItem({ [blob.type]: blob })
+          ])
+      })
     }
   }
 </script>
