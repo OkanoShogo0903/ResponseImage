@@ -27,16 +27,20 @@
     id="copy_able"
     class="image"
     :class="{ animation: is_anime }"
-    :src="url"
+    src="@/assets/logo.png"
     v-on:click="$emit('image-click'); anime(); copy2Clipboard('copy_able');"
+    v-on:load="onLoad"
     >
+      <Favorite
+        @fav-click="$emit('fav-click');"
+        :is_fav="is_fav"
+      />
   </v-img>
 </template>
 
 <script lang="ts">
   import {Component, Emit, Prop, Vue} from "vue-property-decorator";
   import Favorite from "@/components/Favorite.vue";
-  //import { writeClipboardApi } from "@/common/Clipboard";
 
   @Component({
     components: {
@@ -50,6 +54,8 @@
     public is_fav!: Boolean;
     @Prop()
     public is_copy?: Boolean;
+
+    private image_element: HTMLImageElement = new Image();
 
     // Image Animation.
     private is_anime: Boolean = false;
@@ -73,22 +79,45 @@
     }
 
     public copy2Clipboard(id: string) {
-      // コピーしたい画像のElementを取得
-      const el = <HTMLImageElement> document.getElementById(id)! 
-
       // ClipboardAPIは新しい機能のため、typescript環境だと型エラーが発生する。
       // それを避けるためにClipboardAPIを使う部分は生のjsに切り出し、インターフェースを使って型を付けて利用する。
+      
+      // コピーしたい画像のElementを取得
+      //var el: HTMLImageElement = <HTMLImageElement> document.getElementById(id)! 
+      //console.log(el)
+      var el: HTMLImageElement = this.image_element
+        
+      // 空のCanvas作成し、コピーしたい画像を貼り付ける
+      var canvas: HTMLCanvasElement = document.createElement('canvas');
+      canvas.width = el.naturalWidth;
+      canvas.height = el.naturalHeight;
+      canvas.getContext('2d')!.drawImage(el, 0, 0);
+
       interface ClipboardApiWraper {
-        writeClipboardApi(el: HTMLImageElement): any;
+        writeClipboardApi(canvas: HTMLCanvasElement): any;
       }
       // tslint:disable-next-line:no-var-requires // Warning避け
       const clipboard = require('@/common/Clipboard') as ClipboardApiWraper;
 
-      // 画像エレメントをClipboardAPIでクリップボードに書き込む
-      const err = clipboard.writeClipboardApi(el)
-      if ( err !== null ) { // 開発用コード
+      const err = clipboard.writeClipboardApi(canvas)
+      if ( err === null ) {
+        // TODO: ページ下部のアニメーションのテキスト変更
+      }
+      else{
+        // 
         console.log(err)
       }
+      this.anime(); 
+    }
+
+    public onLoad(local_path: string){
+      var img = new Image();
+      img.src = local_path;
+
+      var that: any = this
+      img.addEventListener("load", function() {
+        that.image_element = img
+      }, false);
     }
 
   }
