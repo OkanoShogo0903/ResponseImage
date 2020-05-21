@@ -5,6 +5,9 @@ import UploadPage from '@/pages/UploadPage.vue';
 import { getAllGenre, getAllCharactor } from '@/common/Api';
 Vue.use(Router);
 
+var character_list: string[] = getAllCharactor()
+var genre_list: string[] = ["hoge"]
+
 export default new Router({
   mode: 'history',
   routes: [
@@ -23,11 +26,11 @@ export default new Router({
     {
       path: '/upload',
       name: 'upload',
-      props: {
+      props: (route) => ({
         candidate_charactor: getAllCharactor(),
-        candidate_genre: getAllGenre(),
-      },
-      component: UploadPage ,
+        candidate_genre: genre_list,
+      }) ,
+      // propsでとりあえず値を渡して、親からそれを変更しても反映されない
     },
   ],
 });

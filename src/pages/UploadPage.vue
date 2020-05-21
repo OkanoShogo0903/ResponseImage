@@ -70,13 +70,19 @@
           -->
         </v-col>
 
-        <v-col cols="12" sm="6" class="space" v-if="select_charactor.indexOf(add_phrase) >= 0">
+        <v-col
+          cols="12" sm="6" class="space"
+          v-if="select_genre.indexOf(add_phrase) >= 0"
+        >
           <v-subheader v-text="'新しく追加するジャンル名'"></v-subheader>
           <div class="warning_text">
             新しいジャンルはひとつだけ追加できます
           </div>
         </v-col>
-        <v-col cols="12" sm="6" class="space" v-if="select_charactor.indexOf(add_phrase) >= 0">
+        <v-col
+          cols="12" sm="6" class="space"
+          v-if="select_genre.indexOf(add_phrase) >= 0"
+        >
           <v-text-field
             v-model="new_genre"
             :rules= "[
@@ -121,8 +127,6 @@
 </template>
 
 <script lang="ts">
-  import PropType from 'vue'
-
   import vue2Dropzone from 'vue2-dropzone';
   import 'vue2-dropzone/dist/vue2Dropzone.min.css';
   import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
@@ -191,10 +195,12 @@
     };
 
     public created () {
+      console.log(this.candidate_charactor)
       this.candidate_charactor.unshift(this.add_phrase)
       this.candidate_charactor.push(this.none_phrase)
+      console.log(this.candidate_charactor)
 
-      this.candidate_genre.push(this.add_phrase)
+      this.candidate_genre.unshift(this.add_phrase)
     };
 
     private pressDropzoneUrl(): string{

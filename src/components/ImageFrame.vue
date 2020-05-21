@@ -1,11 +1,10 @@
 <template>
-  <div>
       <!--
       <v-img
         class="image"
         :src="url"
         :class="{ animation: is_anime }"
-        v-on:click="$emit('image-click'); anime(); copy();"
+        v-on:click="$emit('image-click'); anime(); copy2Clipboard();"
       > 
         <template v-slot:placeholder>
           <v-row
@@ -24,24 +23,20 @@
       </v-img>
       -->
 
-      <img
-        id="copy_able"
-        class="image"
-        :class="{ animation: is_anime }"
-        src="@/assets/logo.png"
-        v-on:click="$emit('image-click'); anime(); copy('copy_able');"
-        >
-      </img>
-
-      <p>
-        <canvas id="test_canvas" width=256 height=256 style="border: 1px solid;"></canvas>
-      </p>
-    </div>
+  <v-img
+    id="copy_able"
+    class="image"
+    :class="{ animation: is_anime }"
+    :src="url"
+    v-on:click="$emit('image-click'); anime(); copy2Clipboard('copy_able');"
+    >
+  </v-img>
 </template>
 
 <script lang="ts">
   import {Component, Emit, Prop, Vue} from "vue-property-decorator";
   import Favorite from "@/components/Favorite.vue";
+  //import { writeClipboardApi } from "@/common/Clipboard";
 
   @Component({
     components: {
@@ -77,24 +72,25 @@
       }, this.wait_ms)
     }
 
-    public copy(id: string) {
-      var el: Element = document.getElementById(id)!
-      
-      // 空のCanvas作成
-      var canvas: Element = document.createElement('canvas');
-      canvas.width = el.naturalWidth;
-      canvas.height = el.naturalHeight;
+    public copy2Clipboard(id: string) {
+      // コピーしたい画像のElementを取得
+      const el = <HTMLImageElement> document.getElementById(id)! 
 
-      // Canvasにコピーしたい画像を貼り付ける
-      canvas.getContext('2d').drawImage(el, 0, 0);
+      // ClipboardAPIは新しい機能のため、typescript環境だと型エラーが発生する。
+      // それを避けるためにClipboardAPIを使う部分は生のjsに切り出し、インターフェースを使って型を付けて利用する。
+      interface ClipboardApiWraper {
+        writeClipboardApi(el: HTMLImageElement): any;
+      }
+      // tslint:disable-next-line:no-var-requires // Warning避け
+      const clipboard = require('@/common/Clipboard') as ClipboardApiWraper;
 
-      // CanvasをBlobに変換してクリップボードに貼り付け
-      canvas.toBlob(blob => {
-          navigator.clipboard.write([
-              new ClipboardItem({ [blob.type]: blob })
-          ])
-      })
+      // 画像エレメントをClipboardAPIでクリップボードに書き込む
+      const err = clipboard.writeClipboardApi(el)
+      if ( err !== null ) { // 開発用コード
+        console.log(err)
+      }
     }
+
   }
 </script>
 
