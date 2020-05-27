@@ -4,7 +4,7 @@
         class="image"
         :src="url"
         :class="{ animation: is_anime }"
-        v-on:click="$emit('image-click'); anime(); copy2Clipboard();"
+        v-on:click="$emit('image-click'); anime(); onClick();"
       > 
         <template v-slot:placeholder>
           <v-row
@@ -23,19 +23,23 @@
       </v-img>
       -->
 
-  <v-img
-    id="copy_able"
-    class="image"
-    :class="{ animation: is_anime }"
-    src="@/assets/logo.png"
-    v-on:click="$emit('image-click'); anime(); copy2Clipboard('copy_able');"
-    v-on:load="onLoad"
+  <v-content
     >
-      <Favorite
-        @fav-click="$emit('fav-click');"
-        :is_fav="is_fav"
-      />
-  </v-img>
+    <img
+      id="copy_able"
+      class="image"
+      :class="{ animation: is_anime }"
+      :src=url
+    />
+      <!--
+      v-on:click="$emit('image-click'); anime(); onClick(`copy_able`)"
+      -->
+
+    <Favorite
+      @fav-click="$emit('fav-click');"
+      :is_fav="is_fav"
+    />
+  </v-content>
 </template>
 
 <script lang="ts">
@@ -54,8 +58,6 @@
     public is_fav!: Boolean;
     @Prop()
     public is_copy?: Boolean;
-
-    private image_element: HTMLImageElement = new Image();
 
     // Image Animation.
     private is_anime: Boolean = false;
@@ -78,21 +80,29 @@
       }, this.wait_ms)
     }
 
-    public copy2Clipboard(id: string) {
-      // ClipboardAPIは新しい機能のため、typescript環境だと型エラーが発生する。
-      // それを避けるためにClipboardAPIを使う部分は生のjsに切り出し、インターフェースを使って型を付けて利用する。
-      
-      // コピーしたい画像のElementを取得
-      //var el: HTMLImageElement = <HTMLImageElement> document.getElementById(id)! 
-      //console.log(el)
-      var el: HTMLImageElement = this.image_element
-        
+    /*
+    public created(){
+      this.image_element = <HTMLImageElement> document.get
+      const el = <HTMLImageElement> document.getElementById(id)! 
+
+      console.log(this.image_element)
+    }
+
+    */
+    public onClick(id:string){
+      const el = <HTMLImageElement> document.getElementById(id)! 
+      this.image2Clipboard( el );
+    }
+
+    private image2Clipboard(image: HTMLImageElement) {
       // 空のCanvas作成し、コピーしたい画像を貼り付ける
       var canvas: HTMLCanvasElement = document.createElement('canvas');
-      canvas.width = el.naturalWidth;
-      canvas.height = el.naturalHeight;
-      canvas.getContext('2d')!.drawImage(el, 0, 0);
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      canvas.getContext('2d')!.drawImage(image, 0, 0);
 
+      // ClipboardAPIは新しい機能のため、typescript環境だと型エラーが発生する。
+      // それを避けるためにClipboardAPIを使う部分は生のjsに切り出し、インターフェースを使って型を付けて利用する。
       interface ClipboardApiWraper {
         writeClipboardApi(canvas: HTMLCanvasElement): any;
       }
@@ -104,20 +114,10 @@
         // TODO: ページ下部のアニメーションのテキスト変更
       }
       else{
-        // 
+        // TODO: 
         console.log(err)
       }
       this.anime(); 
-    }
-
-    public onLoad(local_path: string){
-      var img = new Image();
-      img.src = local_path;
-
-      var that: any = this
-      img.addEventListener("load", function() {
-        that.image_element = img
-      }, false);
     }
 
   }
