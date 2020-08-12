@@ -56,7 +56,11 @@
 
       <v-divider></v-divider>
 
-      <v-list-item v-for="choice in genre_list" link >
+      <v-list-item
+        v-if="genre_list.length > 0"
+        v-for="choice in genre_list"
+        link
+      >
         <v-list-item-content @click="onGenreClick(choice);">
           <v-list-item-title>
               {{ choice }}
@@ -86,6 +90,13 @@
           </v-btn>
         </v-list-item-content>
       </v-list-item>
+
+      <v-btn>
+        <span
+          class="mr-2"
+          @click="print"
+          > hoge </span>
+      </v-btn>
     </v-list>
 
   </v-navigation-drawer>
@@ -93,6 +104,7 @@
 
 <script lang="ts">
   import { Component, Prop, Vue } from 'vue-property-decorator';
+  import { getAllGenre } from '@/common/Api';
 
   @Component
   export default class Navigation extends Vue {
@@ -100,8 +112,18 @@
 
     color: string = 'primary';
 
-    @Prop()
-    public genre_list!: string[];
+    private genre_list: string[] = [];
+
+    public mounted(){
+      getAllGenre().then(res => {
+        this.genre_list = res
+      })
+    }
+
+    private print(){
+      console.log("genres")
+      console.log(this.genre_list)
+    }
 
     public onAllGenreClick(){
       this.$router.push('/')

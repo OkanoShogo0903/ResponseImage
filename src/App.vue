@@ -19,7 +19,6 @@
 <script lang="ts">
   import { Component, Watch, Vue } from 'vue-property-decorator';
 
-  import { getAllGenre } from '@/common/Api';
   import Navigation from '@/components/Navigation.vue';
 
   @Component({
@@ -29,16 +28,12 @@
   })
 
   export default class App extends Vue {
-    private genre_list: string[] = new Array();
 
     @Watch('this.$route')
     onRouterChanged(to: string, from: string) {
       console.log(this.$route.params.genre)
     }
 
-    public created(){
-      this.genre_list = getAllGenre()
-    }
   }
 
 </script>

@@ -112,6 +112,8 @@
       <v-btn
         :disabled="!is_valid"
         @click="
+          // TODO : promiseで新しく作るジャンルとかキャラクタ名を送りつけてから画像を送る
+
           $refs.myDropzone.setOption('url', pressDropzoneUrl());
           $refs.myDropzone.processQueue();
           "
@@ -132,7 +134,7 @@
   import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
 
   import FooterEffect from "@/components/FooterEffect.vue";
-  import { pressUploadUrl } from '@/common/Api';
+  import { putGenre, putCharactor, pressUploadUrl, getAllGenre, getAllCharactor } from '@/common/Api';
 
   @Component({
     components: {
@@ -157,10 +159,8 @@
     public none_phrase: string = '選択しない'; // TODO: この辺の変数郡はobjectとしてまとめた方が分かりやすい。特にcandidateとselectみたいなサーバに投げられる要素はひとまとまりにしておいた方がいい。
     public add_phrase: string = '新しく追加する';
 
-    @Prop()
-    private candidate_charactor!: string[];
-    @Prop()
-    private candidate_genre!: string[];
+    private candidate_charactor: string[] = new Array();
+    private candidate_genre: string[] = new Array();
 
     public select_charactor: string = this.none_phrase; // デフォルトで選択なし
     public select_genre: string[] = Array();
@@ -195,12 +195,17 @@
     };
 
     public created () {
-      console.log(this.candidate_charactor)
-      this.candidate_charactor.unshift(this.add_phrase)
-      this.candidate_charactor.push(this.none_phrase)
-      console.log(this.candidate_charactor)
-
-      this.candidate_genre.unshift(this.add_phrase)
+      // TODO: サーバ側でジャンルとキャラクターは昇順ソートしてから渡す
+      getAllGenre().then(res => {
+        this.candidate_genre = res
+        this.candidate_genre.unshift(this.add_phrase)
+      })
+      
+      getAllCharactor().then(res => {
+        this.candidate_charactor = res
+        this.candidate_charactor.unshift(this.add_phrase)
+        this.candidate_charactor.push(this.none_phrase)
+      })
     };
 
     private pressDropzoneUrl(): string{
