@@ -1,6 +1,6 @@
 <template>
   <v-app id="app" dark>
-    <Navigation :genre_list="genre_list" />
+    <Navigation/>
 
     <v-content>
       <v-container>

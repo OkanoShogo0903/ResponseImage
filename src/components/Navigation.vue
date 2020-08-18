@@ -12,10 +12,11 @@
       nav
       class="py-0"
     >
+      <!-- TODO: ロゴ画像に差し替え -->
       <v-list-item two-line :class="'px-0'">
         <v-list-item-avatar>
           <v-img
-            alt="Vuetify Logo"
+            alt="Logo"
             class="shrink mr-2"
             contain
             src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
@@ -25,55 +26,47 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title>Application</v-list-item-title>
-          <v-list-item-subtitle>Subtext</v-list-item-subtitle>
+          <v-list-item-title> C-Board </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
       <v-divider></v-divider>
 
       <v-list-item-content @click="onAllGenreClick();" link>
-        <v-list-item-title>
         <v-btn> 人気順 </v-btn>
-        </v-list-item-title>
       </v-list-item-content>
 
       <v-divider></v-divider>
 
       <v-list-item-content @click="onAllGenreClick();" link>
-        <v-list-item-title>
         <v-btn> お気に入り </v-btn>
-        </v-list-item-title>
       </v-list-item-content>
 
       <v-divider></v-divider>
 
       <v-list-item-content @click="onAllGenreClick();" link>
-        <v-list-item-title>
-        <v-btn> ユーザのアップロード画像 </v-btn>
-        </v-list-item-title>
+        <v-btn> アップロードした画像 </v-btn>
       </v-list-item-content>
 
       <v-divider></v-divider>
 
+      <div v-if="genres">
       <v-list-item
-        v-if="genre_list.length > 0"
-        v-for="choice in genre_list"
+        v-for="g in genres"
         link
       >
-        <v-list-item-content @click="onGenreClick(choice);">
+        <v-list-item-content @click="onGenreClick(g);">
           <v-list-item-title>
-              {{ choice }}
+            {{ g }}
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      </div>
 
       <v-divider></v-divider>
 
       <v-list-item-content @click="onUploadClick()">
-        <v-btn>
-          <span class="mr-2"> 画像をアップロード </span>
-        </v-btn>
+        <v-btn> <span class="mr-2"> 画像をアップロード </span> </v-btn>
       </v-list-item-content>
 
       <v-divider></v-divider>
@@ -90,15 +83,7 @@
           </v-btn>
         </v-list-item-content>
       </v-list-item>
-
-      <v-btn>
-        <span
-          class="mr-2"
-          @click="print"
-          > hoge </span>
-      </v-btn>
     </v-list>
-
   </v-navigation-drawer>
 </template>
 
@@ -112,17 +97,12 @@
 
     color: string = 'primary';
 
-    private genre_list: string[] = [];
+    private genres: string[] = [];
 
     public mounted(){
       getAllGenre().then(res => {
-        this.genre_list = res
+        this.genres = res
       })
-    }
-
-    private print(){
-      console.log("genres")
-      console.log(this.genre_list)
     }
 
     public onAllGenreClick(){
