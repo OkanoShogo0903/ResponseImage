@@ -16,6 +16,7 @@
   export default class ImageFrame extends Vue {
     @Prop()
     public is_fav?: Boolean; // 手軽に使えるように?にした。undefinedのときの色はback_colorになる。
+    // TODO: Favが付いても色が黒い
   }
 </script>
 

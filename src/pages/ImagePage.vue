@@ -3,13 +3,11 @@
     <FooterEffect ref="footer"> Copy ! </FooterEffect>
     <v-container>
       <v-row>
-        <v-col v-for="url in urls" cols="4">
+        <v-col v-for="image in images" cols="4">
           <ImageFrame
-            :url="url"
-            :is_fav="false"
-            :is_copy="true"
+            :image="image"
             @image-click="$refs.footer.anime();"
-            @fav-click="favClicked();"
+            @fav-click=""
           />
         </v-col>
       </v-row>
@@ -18,7 +16,7 @@
 </template>
 
 <script lang="ts">
-  import {getImageUrl, getAllImageUrl } from '@/common/Api';
+  import {getImage, getAllImage, putFav } from '@/common/Api';
   import {Component, Prop, Watch, Vue} from "vue-property-decorator";
   import ImageFrame from "@/components/ImageFrame.vue";
   import FooterEffect from "@/components/FooterEffect.vue";
@@ -31,7 +29,7 @@
   })
   export default class ImagePlace extends Vue {
     // TODO: URLではなく、レスポンシブをそのままjsonバインドしたImageオブジェクトをPropで受け渡すことにする
-    private urls: string[] = new Array();
+    private images: any = new Array(); // TODO: Image型を作る
     private selected_img: any;
 
     @Prop()
@@ -50,19 +48,12 @@
       this.updatePage(this.genre)
     }
 
-    private favClicked(){
-      // TODO: FavのAPI実装
-      // サーバサイドの簡略化のため、boolの反転ではなくsetにした
-      // フロントで取り敢えず属性を変えて、遅れてサーバに反映
-      // api.setFavorite(img[x].id, !this.is_fav) 
-    }
-
     private updatePage(g: (string | null) ){
       if ( g === "all" || g === null ){
-        this.urls = getAllImageUrl()
+        getAllImage().then(res => {this.images = res})
       }
       else{
-        this.urls = getImageUrl(g)
+        getImage(g).then(res => {this.images = res})
       }
     }
   }
