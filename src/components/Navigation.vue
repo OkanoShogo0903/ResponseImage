@@ -74,7 +74,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-btn
-            href="https://github.com/OkanoShogo0903?tab=repositories"
+            :href=github
             target="_blank"
             text
           >
@@ -95,6 +95,7 @@
   export default class Navigation extends Vue {
     private drawer: boolean = true;
     private color: string = 'primary';
+    private github: string = 'https://github.com/OkanoShogo0903?tab=repositories'
     private genres: string[] = [];
 
     public mounted(){
