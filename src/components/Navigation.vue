@@ -93,10 +93,8 @@
 
   @Component
   export default class Navigation extends Vue {
-    drawer: boolean = true;
-
-    color: string = 'primary';
-
+    private drawer: boolean = true;
+    private color: string = 'primary';
     private genres: string[] = [];
 
     public mounted(){

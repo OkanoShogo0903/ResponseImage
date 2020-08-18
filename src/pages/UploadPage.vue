@@ -182,16 +182,18 @@
 
     private checkSubmitValid () {
       if (this.select_genre.length > 0) {
-        if (this.select_genre.length <= this.max_select) {
-          if (this.is_checkbox) {
-            if ( this.drop_length > 0 ) {
-              this.is_valid = true;
-              return
-            }
-          }
-        }
+        this.is_valid = false;
       }
-      this.is_valid = false;
+      if (this.select_genre.length <= this.max_select) {
+        this.is_valid = false;
+      }
+      if (this.is_checkbox) {
+        this.is_valid = false;
+      }
+      if ( this.drop_length === 0 ) {
+        this.is_valid = false;
+      }
+      this.is_valid = true;
     };
 
     public created () {
