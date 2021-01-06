@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@types/node": "^13.13.8",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "file-system": "^2.2.2",
     "fs": "0.0.1-security",
